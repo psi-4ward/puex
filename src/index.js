@@ -24,13 +24,15 @@ export default class Store {
     this.mutations = mutations
     this.actions = actions
     this.subscribers = subscribers
-    this.getters = []
 
     if (plugins) {
       plugins.forEach(p => this.use(p))
     }
 
-    devtoolPlugin(this)
+    if (Vue.config.devtools) {
+      this.getters = [] // hack for vue-devtools
+      devtoolPlugin(this)
+    }
 
     this.mapState = createMapState(this)
     this.mapActions = mapToMethods('actions', 'dispatch', this)
